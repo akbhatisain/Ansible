@@ -1,0 +1,99 @@
+Welcome, In this article, you will learn to launch an EC2 instance using Ansible from the local machine.
+So let’s get started.
+For working on Ansible we need to first set up a few things,
+
+>    AWS user account
+>    Ansible
+>   Python
+>   Boto
+
+Note: For creating the AWS account just go to the Amazon AWS server and follow the signup process.
+Once the AWS account gets created you need to create the IAM user (As we will need a secret key and secret ID).
+Download the credencials file after user creation. we will use the value in yaml file.
+Key-Cretion :
+Key_name: Go to EC2 dashboard -> Key pairs -> Create key pair -> Copy key pair name & save it somewhere.
+
+Once you are done with the AWS account and the User creation, you can move forward and install the required things.
+
+    Ansible:
+        Install Ansible on a RHEL/CentOS Linux based system
+            $ sudo yum install Ansible
+        Install Ansible on a Debian/Ubuntu Linux based system
+            $ sudo apt-get install software-properties-common
+            $ sudo apt-add-repository ppa:Ansible/Ansible
+            $ sudo apt-get update
+            $ sudo apt-get install Ansible
+        Install Ansible using pip
+            $ sudo pip install Ansible
+            $ Once installed you can verify by Ansible –version this command.
+    Python:
+        $ sudo apt-get update
+        $ sudo apt-get install python3.6
+        $ You can follow this link for more details.
+    Boto: (Boto is a Python package which provides an interface to AWS.)
+        First, install pip
+            $ sudo apt install python3-pip or
+            $ yum install python-pip
+        Now install boto
+            $ pip install boto
+
+********************************************************************************
+Here are some example of well known AMi for refrences:
+
+> Amazon Linux 2 AMI (HVM) - Kernel 5.10, SSD Volume Type  -   ami-03ededff12e34e59e
+> Amazon Linux 2 AMI (HVM) - Kernel 4.14, SSD Volume Type  -   ami-0a3c14e1ddbe7f23c
+> Red Hat Enterprise Linux 8 (HVM), SSD Volume Type        -   ami-0b0af3577fe5e3532
+> Ubuntu Server 20.04 LTS (HVM), SSD Volume Type           -   ami-04505e74c0741db8d
+> Ubuntu Server 18.04 LTS (HVM), SSD Volume Type           -   ami-0e472ba40eb589f49
+> Microsoft Windows Server 2019 Base                       -   ami-08ed5c5dd62794ec0
+
+Now open a terminal and create a Vm provisisoning file with the extension .yml or .ymal, add below script and save it.
+$ vi vm-provisioning.yml
+---
+# Basic provisioning example
+- name: Ansible test
+  hosts: localhost
+  tasks:
+    - name: launching AWS instance using Ansible
+      ec2:
+        key_name: aws_instance_Ansible
+        instance_type: t2.micro
+        image: ami-0dacb0c129b49f529
+        region: us-east-2
+        wait: yes
+        group: Ansible
+        count: 1
+        vpc_subnet_id: default
+        assign_public_ip: yes
+        aws_access_key: ***********xxxxxxxx
+        Aws_secret_key: ***********xxxxxxxx
+*********************************************************************************
+Now craete a inventory file in local system :
+add an entry in inventory file as my internet is running on the local server.
+$ vi inventory
+[ec2]
+localhost
+*********************************************************************************
+Now our Ansible file is ready.
+Run below command to check whether Ansible is ready to launch EC2 or not.
+# Ansible-playbook -C vm-provisioning.yml
+
+Where -C will check if everything is ready or not.
+Once everything looks good, run below command and within a minute your EC2 server will be launched.
+
+# Ansible-playbook vm-provisioning.yml
+
+Now if you go to Amazon console you will see the server is launched successfully.
+for confirmation try below command:
+
+$ aws configure
+AWS Access Key ID [None]: 
+AWS Secret Access Key [None]:
+Default region name [None]:
+Default output format [None]:
+
+$ aws ec2 ls
+
+Conclusion:
+So, we are done with creating a basic EC2 server using Ansible. 
+I hope this will help you to use Ansible in your upcoming projects.

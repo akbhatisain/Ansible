@@ -9,6 +9,7 @@ For working on Ansible we need to first set up a few things,
 
 Note: For creating the AWS account just go to the Amazon AWS server and follow the signup process.
 Once the AWS account gets created you need to create the IAM user (As we will need a secret key and secret ID).
+Make sure Iam user have ec2 service access.
 Download the credencials file after user creation. we will use the value in yaml file.
 Key-Cretion :
 Key_name: Go to EC2 dashboard -> Key pairs -> Create key pair -> Copy key pair name & save it somewhere.
